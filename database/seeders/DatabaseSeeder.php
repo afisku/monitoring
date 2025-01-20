@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Closure;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 class DatabaseSeeder extends Seeder
@@ -20,10 +21,27 @@ class DatabaseSeeder extends Seeder
         $this->withProgressBar(1, fn() => User::factory(1)->create([
             'name' => 'Superadmin',
             'username' => 'superadmin',
-            'email' => 'superadmin@larafila.com',
+            'email' => 'superadmin@polytrack.com',
             'password' => bcrypt('12345678'),
         ]));
         $this->command->info('Superadmin user has been created successfully.');
+
+        Artisan::call('shield:install', [
+            'panel' => 'admin',
+            '--no-interaction' => true,
+        ]);
+
+        Artisan::call('shield:generate', [
+            '--panel' => 'admin',
+            '--all' => true,
+            '--no-interaction' => true,
+        ]);
+
+        Artisan::call('shield:super-admin', [
+            '--user' => 1,
+            '--panel' => 'admin',
+            '--no-interaction' => true,
+        ]);
     }
 
     protected function withProgressBar(int $amount, Closure $createCollectionOfOne): Collection

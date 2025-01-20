@@ -27,14 +27,70 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->maxContentWidth('full')
             ->login(Login::class)
             ->colors([
                 'primary' => Color::Blue,
             ])
             ->brandName(env('APP_NAME'))
-            ->brandLogo(asset('images/logo.png'))
-            ->favicon(asset('images/favicons/android-chrome-192x192.png'))
-            ->brandLogoHeight(fn() => request()->route()->getName() == 'filament.admin.auth.login' ? '7rem' : '3rem')
+            ->brandLogo(function () {
+                if (request()->route()->getName() == 'filament.admin.auth.login') {
+                    return asset('images/Database.png');
+                }
+
+                if (request()->route()->getName() == 'livewire.update') {
+                    try {
+                        // Decode the incoming request data safely
+                        $content = request()->getContent();
+                        $decodedContent = json_decode($content, true);
+
+                        // Ensure components key exists and is an array
+                        if (isset($decodedContent['components'][0]['snapshot'])) {
+                            // Decode the snapshot JSON
+                            $snapshot = json_decode($decodedContent['components'][0]['snapshot']);
+
+                            // Check if memo->path exists in the snapshot
+                            if (isset($snapshot->memo->path) && $snapshot->memo->path == 'admin/login') {
+                                return asset('images/database.png');
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // ignore
+                    }
+                }
+
+                return asset('images/dasboard33.png');
+            })
+            ->brandLogoHeight(function () {
+                if (request()->route()->getName() == 'filament.admin.auth.login') {
+                    return '6rem';
+                }
+
+                if (request()->route()->getName() == 'livewire.update') {
+                    try {
+                        // Decode the incoming request data safely
+                        $content = request()->getContent();
+                        $decodedContent = json_decode($content, true);
+
+                        // Ensure components key exists and is an array
+                        if (isset($decodedContent['components'][0]['snapshot'])) {
+                            // Decode the snapshot JSON
+                            $snapshot = json_decode($decodedContent['components'][0]['snapshot']);
+
+                            // Check if memo->path exists in the snapshot
+                            if (isset($snapshot->memo->path) && $snapshot->memo->path == 'admin/login') {
+                                return '6rem';
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // ignore
+                    }
+                }
+
+                return '5rem';
+            })
+            ->favicon(asset('images/database.png'))
+            ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
