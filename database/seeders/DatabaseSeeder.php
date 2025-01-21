@@ -42,6 +42,10 @@ class DatabaseSeeder extends Seeder
             '--panel' => 'admin',
             '--no-interaction' => true,
         ]);
+
+        $this->call([
+            UnitSeeder::class,
+        ]);
     }
 
     protected function withProgressBar(int $amount, Closure $createCollectionOfOne): Collection
@@ -62,4 +66,6 @@ class DatabaseSeeder extends Seeder
 
         return $items;
     }
+
+    
 }
