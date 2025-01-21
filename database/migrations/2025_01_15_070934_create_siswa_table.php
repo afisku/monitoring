@@ -17,18 +17,23 @@ return new class extends Migration
             $table->id();
             $table->string('va')->unique();
             $table->string('nm_siswa');
-            $table->enum('jenis_kelamin', array_column(JenisKelaminEnum::cases(), 'value'));
-            $table->string('telp');
-            $table->string('email')->unique();
-            $table->string('negara');
-            $table->string('provinsi');
-            $table->string('kab_kota');
-            $table->string('alamat');
+            $table->string('tempat_lahir')->nullable();
+            $table->date('tgl_lahir')->nullable();
+            $table->enum('jenis_kelamin', array_column(JenisKelaminEnum::cases(), 'value'))->nullable();
+            $table->string('telp')->nullable();
+            $table->string('email')->nullable();
+            $table->string('negara')->nullable();
+            $table->string('provinsi')->nullable();
+            $table->string('kab_kota')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('asal_sekolah')->nullable();
+            $table->string('kelas')->nullable();
+            $table->string('diskon')->nullable();
             $table->foreignIdFor(Unit::class, 'unit_id')
-            ->nullable()
-            ->references('id')
-            ->on('unit')
-            ->nullOnDelete();
+                ->nullable()
+                ->references('id')
+                ->on('units')
+                ->nullOnDelete();
             $table->timestamps();
         });
     }
