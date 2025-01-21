@@ -20,10 +20,10 @@ return new class extends Migration
             $table->enum('jenis_kelamin', array_column(JenisKelaminEnum::cases(), 'value'));
             $table->string('telp');
             $table->string('email')->unique();
-            $table->string('negara');
-            $table->string('provinsi');
-            $table->string('kab_kota');
-            $table->string('alamat');
+            $table->string('negara')->nullable();
+            $table->string('provinsi')->nullable();
+            $table->string('kab_kota')->nullable();
+            $table->string('alamat')->nullable();
             $table->foreignIdFor(Unit::class, 'unit_id')
             ->nullable()
             ->references('id')
