@@ -20,6 +20,12 @@ class UnitResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Unit';
+
+    protected static ?string $modelLabel = 'Unit';
+
+    protected static ?string $pluralModelLabel = 'Units';
+
     protected static ?string $cluster = Master::class;
 
     public static function form(Form $form): Form
