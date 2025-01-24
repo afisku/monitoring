@@ -2,10 +2,11 @@
 
 namespace App\Imports;
 
-use App\Models\Siswa;
 use App\Models\Unit;
-use Filament\Notifications\Notification;
+use App\Models\Siswa;
+use App\Enums\JenisKelaminEnum;
 use Illuminate\Support\Collection;
+use Filament\Notifications\Notification;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -38,6 +39,12 @@ class SiswaImportProcessor implements ToCollection, WithHeadingRow
         $unitMap = Unit::select('id', 'nm_unit')->get()->toArray();
 
         foreach ($rows as $row) {
+            try {
+            // Validasi nomor VA
+            if (Siswa::where('va', $row['va'])->exists()) {
+                throw new \Exception("No. VA (contoh = {$row['va']}) sudah ada.");
+            }
+
             // Cari unit_id berdasarkan nm_unit
             $unit_id = $this->searchInArray($unitMap, 'nm_unit', $row['nm_unit']);
 
@@ -47,7 +54,7 @@ class SiswaImportProcessor implements ToCollection, WithHeadingRow
                 [
                     'nm_siswa' => $row['nm_siswa'],
                     'tempat_lahir' => $row['tempat_lahir'],
-                    'jenis_kelamin' => $row['jenis_kelamin'],
+                    'jenis_kelamin' => $this->convertJenisKelamin($row['jenis_kelamin']),
                     'tgl_lahir' => $row['tgl_lahir'],
                     'telp' => $row['telp'],
                     'email' => $row['email'],
@@ -59,6 +66,15 @@ class SiswaImportProcessor implements ToCollection, WithHeadingRow
                     'unit_id' => $unit_id,
                 ]
             );
+        } catch (\Exception $e) {
+            Notification::make()
+                ->title('Gagal Memproses Data')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+            return;
+        }
+
         }
 
         Notification::make()
@@ -76,5 +92,14 @@ class SiswaImportProcessor implements ToCollection, WithHeadingRow
             }
         }
         return null;
+    }
+
+    private function convertJenisKelamin(string $jenisKelamin): string
+    {
+        return match (strtolower(trim($jenisKelamin))) {
+            'laki-laki', 'laki laki', 'l' => JenisKelaminEnum::LakiLaki->value,
+            'perempuan', 'p' => JenisKelaminEnum::Perempuan->value,
+            default => throw new \InvalidArgumentException("Jenis kelamin '$jenisKelamin' tidak valid."),
+        };
     }
 }

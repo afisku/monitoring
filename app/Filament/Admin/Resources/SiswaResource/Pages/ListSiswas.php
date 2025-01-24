@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Resources\SiswaResource\Pages;
 use App\Filament\Admin\Resources\SiswaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use App\Imports\SiswaImport;
+use App\Imports\SiswaImportProcessor;
 use Maatwebsite\Excel\Facades\Excel;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -20,10 +20,13 @@ class ListSiswas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+
+            \EightyNine\ExcelImport\ExcelImportAction::make()
+            ->slideOver()
+            ->color("primary")
+            ->use(SiswaImportProcessor::class),
+
             Actions\CreateAction::make(),
-
-
-            
         ];
 
     }

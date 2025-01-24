@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Unit;
+use App\Models\TahunAkademik;
 use App\Enums\JenisKelaminEnum;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -29,6 +30,10 @@ return new class extends Migration
             $table->string('asal_sekolah')->nullable();
             $table->string('kelas')->nullable();
             $table->string('diskon')->nullable();
+            $table->foreignIdFor(TahunAkademik::class, 'tahun_akademik_id')
+                ->references('id')
+                ->on('tahun_akademik')
+                ->cascadeOnDelete();
             $table->foreignIdFor(Unit::class, 'unit_id')
                 ->nullable()
                 ->references('id')
