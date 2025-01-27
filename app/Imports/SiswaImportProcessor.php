@@ -63,8 +63,8 @@ class SiswaImportProcessor implements ToCollection, WithHeadingRow
                         'tgl_lahir' => $row['tgl_lahir'] ? $this->convertExcelDate($row['tgl_lahir']) : null,
                         'kab_kota' => $row['kab_kota'] ?? '-',
                         'yatim_piatu' => $row['yatim_piatu'] ?? 'Tidak',
-                        'unit_id' => $unit_id,
-                        'tahun_akademik_id' => $tahunAkademik_id,
+                        'nm_unit' => $row['nm_unit'] ?? '-',
+                        'tahun_akademik' => $row['tahun_akademik'] ?? '-',
                     ]
                 );
             } catch (\Exception $e) {

@@ -90,31 +90,17 @@ class SiswaResource extends Resource
                         ->placeholder('d/m/Y')
                         ->native(false)
                         ->displayFormat('d/m/Y'),
-                    Forms\Components\TextInput::make('telp')
-                        ->label('Nomor Telepon')
-                        ->placeholder('Masukkan Nomor Telepon')
-                        ->maxLength(255),    
-                    Forms\Components\TextInput::make('email')
+                        Forms\Components\TextInput::make('email')
                         ->label('Email')
                         ->placeholder('Masukkan Email')
                         ->email(),
-                    Forms\Components\TextInput::make('negara')
-                        ->label('Negara')
-                        ->placeholder('Masukkan Negara'),
 
-                    Forms\Components\TextInput::make('provinsi')
-                        ->label('Provinsi')
-                        ->placeholder('Masukkan Provinsi'),
-
-                    Forms\Components\TextInput::make('kab_kota')
-                        ->label('Kabupaten/Kota')
-                        ->placeholder('Masukkan Kabupaten/Kota'),
-
-                    Forms\Components\TextInput::make('alamat')
-                        ->label('Alamat')
-                        ->placeholder('Masukkan Alamat'),
-
-                    Forms\Components\TextInput::make('asal_sekolah')
+                        Forms\Components\TextInput::make('telp')
+                            ->label('Nomor Telepon')
+                            ->placeholder('Masukkan Nomor Telepon')
+                            ->maxLength(255),    
+                    
+                        Forms\Components\TextInput::make('asal_sekolah')
                         ->label('Asal Sekolah')
                         ->placeholder('Masukkan Asal Sekolah')
                         ->maxLength(255)
@@ -125,17 +111,26 @@ class SiswaResource extends Resource
                             'required' => 'Asal Sekolah tidak boleh kosong',
                             'max' => 'Asal Sekolah tidak boleh lebih dari 255 karakter',
                         ]),
-                    Forms\Components\TextInput::make('kelas')
-                        ->label('Kelas')
-                        ->placeholder('Masukkan Kelas'),
-                        Forms\Components\Select::make('diskon')
-                        ->label('Diskon')
-                        ->placeholder('PILIH DISKON')
-                        ->options([
-                            'draft' => 'Draft',
-                            'reviewing' => 'Reviewing',
-                            'published' => 'Published',
+
+                    Forms\Components\TextInput::make('pindahan')
+                        ->label('Pindahan')
+                        ->placeholder('Masukkan Pindahan'),
+
+                    Forms\Components\TextInput::make('kab_kota')
+                        ->label('Kabupaten/Kota')
+                        ->placeholder('Masukkan Kabupaten/Kota')
+                        ->maxLength(50)
+                        ->validationMessages([
+                            'max' => 'Kabupaten/Kota tidak boleh lebih dari 50 karakter',
                         ]),
+
+                        Forms\Components\Select::make('yatim_piatu')
+                        ->options([
+                            'YA' => 'YA',
+                            'TIDAK' => 'TIDAK',
+                        ])
+                        ->default('TIDAK'),
+
                     Forms\Components\Select::make('unit_id')
                         ->label('Unit')
                         ->placeholder('PILIH UNIT')
@@ -173,6 +168,10 @@ class SiswaResource extends Resource
                         );
                     }
                 ),
+                Tables\Columns\TextColumn::make('va')
+                    ->label('No. VA')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('nm_siswa')
                     ->label('Nama Lengkap')
                     ->description(function (Siswa $record) {
@@ -180,8 +179,8 @@ class SiswaResource extends Resource
                         if ($record->email) {
                             $data .= '<small>Email : ' . $record->email . '</small>';
                         }
-                        if ($record->va) {
-                            $data .= '<br><small>No. VA : ' . $record->va . '</small>';
+                        if ($record->telp) {
+                            $data .= '<br><small>No. Telp : ' . $record->telp . '</small>';
                         }
                         return new HtmlString($data);
                     })
@@ -206,13 +205,19 @@ class SiswaResource extends Resource
                     ->label('Unit')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('telp')
-                    ->label('No. Telp')
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('asal_sekolah')
                     ->label('Asal Sekolah')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                    
+                Tables\Columns\TextColumn::make('yatim_piatu')
+                    ->label('Yatim/Piatu')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                
                 Tables\Columns\TextColumn::make('kab_kota')
                     ->label('Kabupaten/Kota')
                     ->sortable()
