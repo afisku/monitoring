@@ -18,7 +18,8 @@ class SiswaImportProcessor implements ToCollection, WithHeadingRow
 {
     // Header yang diperlukan pada file Excel
     protected $requiredHeaders = [
-        'va', 'nm_siswa', 'jenis_kelamin', 'email', 'telp','asal_sekolah','pindahan', 'tempat_lahir','tgl_lahir', 'kab_kota','yatim_piatu', 'nm_unit','tahun_akademik'
+        'va', 'nm_siswa', 'jenis_kelamin', 'email', 'telp','asal_sekolah','pindahan',
+         'tempat_lahir','tgl_lahir', 'kab_kota','yatim_piatu', 'nama_unit','tahun_akademik'
     ];
 
     public function collection(Collection $rows)
@@ -39,7 +40,16 @@ class SiswaImportProcessor implements ToCollection, WithHeadingRow
 
         // Ambil data master unit
         $unitMap = Unit::select('id', 'nm_unit')->get()->toArray();
-        $tahunAkademikMap = TahunAkademik::select('id', 'th_akademik')->get()->toArray();   
+
+        //ambil data master akademik
+        $tahunAkademikMap = TahunAkademik::where('status', true)
+        ->select('id', 'th_akademik')
+        ->get()
+        ->toArray();   
+
+         // Inisialisasi pesan error global
+        $errorMessages = [];
+        $successCount = 0; // Variabel untuk menghitung data berhasil diupload
 
         foreach ($rows as $index => $row) {
             try {
@@ -47,8 +57,33 @@ class SiswaImportProcessor implements ToCollection, WithHeadingRow
                     throw new \Exception("No. VA (contoh = {$row['va']}) sudah ada pada baris ke-" . ($index + 1));
                 }
         
-                $unit_id = $this->searchInArray($unitMap, 'nm_unit', $row['nm_unit']);
-                $tahunAkademik_id = $this->searchInArray($tahunAkademikMap, 'th_akademik', $row['tahun_akademik']);
+
+
+                // Validasi dan cari unit
+                $unit_id = null;
+                if (!in_array($row['nama_unit'], [null, '', '-', '#N/A'])) {
+                    $unit_id = $this->searchInArray($unitMap, 'nm_unit', $row['nama_unit']);
+                    if (!$unit_id) {
+                        $errorMessages[] = "Unit '{$row['nama_unit']}' tidak ditemukan di DATA MASTER pada baris ke-" . ($index + 1);
+                        continue; // Lewati baris jika unit tidak valid
+                    }
+                } else {
+                    $errorMessages[] = "Unit kosong atau tidak valid pada baris ke-" . ($index + 1);
+                    continue; // Lewati baris jika unit kosong
+                }
+
+               // Validasi dan cari tahun akademik
+               $tahunAkademik_id = null;
+               if (!in_array($row['tahun_akademik'], [null, '', '-', '#N/A'])) {
+                   $tahunAkademik_id = $this->searchInArray($tahunAkademikMap, 'th_akademik', $row['tahun_akademik']);
+                   if (!$tahunAkademik_id) {
+                       $errorMessages[] = "Tahun akademik '{$row['tahun_akademik']}' tidak ditemukan atau tidak aktif pada baris ke-" . ($index + 1);
+                       continue;
+                   }
+               } else {
+                   $errorMessages[] = "Tahun akademik kosong pada baris ke-" . ($index + 1);
+                   continue;
+               }
         
                 Siswa::updateOrCreate(
                     ['va' => $row['va']],
@@ -62,26 +97,33 @@ class SiswaImportProcessor implements ToCollection, WithHeadingRow
                         'tempat_lahir' => $row['tempat_lahir'] ?? '-',
                         'tgl_lahir' => $row['tgl_lahir'] ? $this->convertExcelDate($row['tgl_lahir']) : null,
                         'kab_kota' => $row['kab_kota'] ?? '-',
-                        'yatim_piatu' => $row['yatim_piatu'] ?? 'Tidak',
-                        'nm_unit' => $row['nm_unit'] ?? '-',
-                        'tahun_akademik' => $row['tahun_akademik'] ?? '-',
+                        'yatim_piatu' => $row['yatim_piatu'] ?? 'TIDAK',
+                        'unit_id' => $unit_id,
+                        'tahun_akademik_id' => $tahunAkademik_id,
                     ]
                 );
+
+                $successCount++; // Tambahkan jika berhasil diproses
             } catch (\Exception $e) {
-                Notification::make()
-                    ->title('Gagal Memproses Data')
-                    ->body("Kesalahan pada baris ke-" . ($index + 1) . ": " . $e->getMessage())
-                    ->danger()
-                    ->send();
-                return;
+                $errorMessages[] = "Kesalahan pada baris ke-" . ($index + 1) . ": " . $e->getMessage();
             }
+        }
+    
+        // Kirim notifikasi untuk kesalahan
+        if (!empty($errorMessages)) {
+            Notification::make()
+                ->title('Gagal Memproses Beberapa Data')
+                ->body(implode("\n", $errorMessages))
+                ->danger()
+                ->send();
+            return;
         }
 
         Notification::make()
-            ->title('Berhasil Import Siswa')
-            ->body('Data siswa berhasil diimpor ke dalam sistem.')
-            ->success()
-            ->send();
+        ->title('Berhasil Import Siswa')
+        ->body("Data siswa berhasil diimpor ke dalam sistem. Total data berhasil: $successCount.")
+        ->success()
+        ->send();
     }
 
     private function searchInArray(array $data, string $searchKey, string $searchValue)

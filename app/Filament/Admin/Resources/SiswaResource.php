@@ -168,10 +168,6 @@ class SiswaResource extends Resource
                         );
                     }
                 ),
-                Tables\Columns\TextColumn::make('va')
-                    ->label('No. VA')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('nm_siswa')
                     ->label('Nama Lengkap')
                     ->description(function (Siswa $record) {
@@ -201,13 +197,32 @@ class SiswaResource extends Resource
                         }
                         return new HtmlString($data);
                     }),
+                Tables\Columns\TextColumn::make('va')
+                    ->label('No. VA')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('unit.nm_unit')
                     ->label('Unit')
+                    ->badge()
+                    ->color(function (string $state): string {
+                        return match ($state) {
+                            'SMAIT' => 'warning',
+                            'SMPIT' => 'success',
+                            'SDIT'  => 'danger',
+                            'TKIT'  => 'info',
+                        };
+                    })
                     ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('asal_sekolah')
                     ->label('Asal Sekolah')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                
+                Tables\Columns\TextColumn::make('pindahan')
+                    ->label('Pindahan')
                     ->sortable()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
