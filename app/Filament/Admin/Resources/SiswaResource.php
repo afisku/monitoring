@@ -144,15 +144,15 @@ class SiswaResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->extremePaginationLinks()
+            ->recordAction(null)
             ->recordUrl(null)
+            ->extremePaginationLinks()
             ->paginated([5, 10, 20, 50])
             ->defaultPaginationPageOption(10)
-            ->striped()
             ->recordClasses(function () {
-                $classes = 'table-vertical-align-top ';
-                return $classes;
-            })
+            $classes = 'table-vertical-align-top ';
+            return $classes;
+        })
             ->columns([
                 Tables\Columns\TextColumn::make('index')
                 ->label('NO')

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\CroscekSdResource\Pages;
 use App\Filament\Admin\Resources\CroscekSdResource\RelationManagers;
+use App\Filament\Admin\Resources\App\Filament\Admin\Resources\CroscekSdResource\Widgets\CroscekSdStats;
 
 class CroscekSdResource extends Resource
 {
@@ -44,9 +45,6 @@ class CroscekSdResource extends Resource
             'delete_any',
             'force_delete',
             'force_delete_any',
-            'validasi',
-            'terima',
-            'bayar',
         ];
     }
 
@@ -59,36 +57,47 @@ class CroscekSdResource extends Resource
                 Forms\Components\Section::make()
                     ->columns(1)
                     ->schema([
-                        Forms\Components\Hidden::make('unit_id')
-    ->default(fn (?CroscekSd $record) => $record?->unit_id ?? auth()->user()->unit_id)
-    ->required(),
-                    
-                        Forms\Components\TextInput::make('nm_unit')
+                    Forms\Components\Select::make('unit_id')
                         ->label('Unit')
-                        ->default(fn (?CroscekSd $record) => $record?->unit?->nm_unit ?? auth()->user()->unit?->nm_unit) // Gunakan relasi unit
-                        ->disabled() // Hanya untuk ditampilkan
-                        ->required(),
-
-
-                    Forms\Components\Select::make('siswa_id')
-                        ->label('Siswa')
-                        ->placeholder('Pilih Siswa')
-                        ->options(function (callable $get, ?CroscekSd $record) {
-                            $unitId = $get('unit_id'); // Ambil unit_id dari state form
-                            $selectedSiswaId = $record?->siswa_id; // Ambil siswa_id dari record saat mode edit
-
-                            $query = Siswa::query()
-                                ->where('unit_id', $unitId);
-
-                            // Tambahkan siswa yang dipilih dalam mode edit ke opsi
-                            if ($selectedSiswaId) {
-                                $query->orWhere('id', $selectedSiswaId);
-                            }
-
-                            return $query->pluck('nm_siswa', 'id');
-                        })
+                        ->placeholder('Pilih Unit')
+                        ->disabled(fn($operation) => $operation == 'edit' || !auth()->user()->hasRole(['superadmin', 'admin']))
+                        ->options(Unit::all()->pluck('nm_unit', 'id'))
+                        ->default(!auth()->user()->hasRole(['superadmin', 'admin']) && auth()->user()->unit_id != null ? auth()->user()->unit_id : null)
+                        ->live()
                         ->searchable()
-                        ->required(),
+                        ->required()
+                        ->afterStateUpdated(function (callable $set) {
+                            $set('siswa_id', null);
+                        }),
+                    Forms\Components\Select::make('siswa_id')
+                            ->label('Siswa')
+                            ->placeholder('Pilih Siswa')
+                            ->disabledOn('edit')
+                            ->options(function (callable $get, ?CroscekSd $record) {
+                                $selectedSiswaIds = CroscekSd::pluck('siswa_id')->toArray();
+
+                                // Tambahkan siswa yang sedang dipilih jika sedang dalam mode edit
+                                if ($record && $record->siswa_id) {
+                                    $selectedSiswaIds = array_diff($selectedSiswaIds, [$record->siswa_id]);
+                                }
+
+                                // Query untuk mendapatkan daftar siswa
+                                $query = Siswa::query()
+                                    ->where('unit_id', $get('unit_id'))
+                                    ->whereNotIn('id', $selectedSiswaIds);
+
+                                // Tambahkan siswa yang sedang dipilih ke opsi, jika mode edit
+                                if ($record && $record->siswa_id) {
+                                    $query->orWhere('id', $record->siswa_id);
+                                }
+
+                                // Format nama siswa agar tampil: "NAMA - VA"
+                                return $query->get()->mapWithKeys(function ($siswa) {
+                                return [$siswa->id => "{$siswa->nm_siswa} - {$siswa->va}"];
+                                });
+                            })
+                            ->searchable()
+                            ->required(),
 
 
                         Forms\Components\Select::make('biodata')
@@ -172,6 +181,15 @@ class CroscekSdResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordAction(null)
+            ->recordUrl(null)
+            ->extremePaginationLinks()
+            ->paginated([5, 10, 20, 50])
+            ->defaultPaginationPageOption(10)
+            ->recordClasses(function () {
+                $classes = 'table-vertical-align-top ';
+                return $classes;
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('siswa.nm_siswa')
                 ->label('NAMA SISWA')
@@ -262,6 +280,14 @@ class CroscekSdResource extends Resource
             //
         ];
     }
+
+    public static function getWidgets(): array
+    {
+        return [
+            CroscekSdStats::class,
+        ];
+    }
+
 
     public static function getPages(): array
     {
