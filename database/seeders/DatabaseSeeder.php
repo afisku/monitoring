@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use Closure;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Artisan;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\Console\Helper\ProgressBar;
 
@@ -47,6 +49,36 @@ class DatabaseSeeder extends Seeder
             UnitSeeder::class,
             TahunAkademikSeeder::class,
         ]);
+
+        if (!Role::where('name', 'operator_sd')->exists()) {
+            $operatorJurusanRole = Role::create(['name' => 'operator_sd']);
+            $operatorJurusanRolePermissions = Permission::query()
+                ->whereIn('name', [
+                    'view_honor::non::kjm',
+                    'view_any_honor::non::kjm',
+                    'create_honor::non::kjm',
+                    'update_honor::non::kjm',
+                    'delete_honor::non::kjm',
+                    'delete_any_honor::non::kjm',
+                    'view_honor::kjm',
+                    'view_any_honor::kjm',
+                    'create_honor::kjm',
+                    'update_honor::kjm',
+                    'delete_honor::kjm',
+                    'delete_any_honor::kjm'
+                ])->get();
+            $operatorJurusanRole->syncPermissions($operatorJurusanRolePermissions);
+
+            $user = User::create([
+                'name' => 'User 1',
+                'username' => 'user1',
+                'email' => 'asd@asd.asd',
+                'email_verified_at' => now(),
+                'unit_id' => 2,
+                'password' => bcrypt('asdasd'),
+            ]);
+            $user->assignRole('operator_sd');
+        }
     }
 
     protected function withProgressBar(int $amount, Closure $createCollectionOfOne): Collection
