@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\CroscekSdResource\Pages;
 use App\Filament\Admin\Resources\CroscekSdResource\RelationManagers;
-use App\Filament\Admin\Resources\App\Filament\Admin\Resources\CroscekSdResource\Widgets\CroscekSdStats;
+use App\Filament\Admin\Resources\CroscekSdResource\Widgets\CroscekSdStats;
 
 class CroscekSdResource extends Resource
 {
@@ -280,14 +280,6 @@ class CroscekSdResource extends Resource
             //
         ];
     }
-
-    public static function getWidgets(): array
-    {
-        return [
-            CroscekSdStats::class,
-        ];
-    }
-
 
     public static function getPages(): array
     {
