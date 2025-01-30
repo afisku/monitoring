@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\CroscekSdResource\Pages;
 
 use App\Filament\Admin\Resources\CroscekSdResource;
-use App\Filament\Admin\Widgets\CroscekSdWidget;
+use App\Filament\Admin\Resources\CroscekSdResource\Widgets\CroscekSiswaSdWidget;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -21,7 +21,7 @@ class ListCroscekSds extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            CroscekSdWidget::class,
+            CroscekSiswaSdWidget::class,
         ];
     }
 

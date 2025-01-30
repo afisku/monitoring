@@ -2,42 +2,40 @@
 
 namespace App\Filament\Admin\Resources;
 
-
+use stdClass;
 use Carbon\Carbon;
 use Filament\Forms;
 use App\Models\Unit;
 use Filament\Tables;
 use App\Models\Siswa;
 use Filament\Forms\Form;
-use App\Models\CroscekSd;
+use App\Models\CroscekTk;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\CroscekSdResource\Pages;
-use App\Filament\Admin\Resources\CroscekSdResource\RelationManagers;
-use App\Filament\Admin\Resources\CroscekSdResource\Widgets\CroscekSdStats;
-use stdClass;
+use App\Filament\Admin\Resources\CroscekTkResource\Pages;
+use App\Filament\Admin\Resources\CroscekTkResource\RelationManagers;
 
-class CroscekSdResource extends Resource
+class CroscekTkResource extends Resource
 {
-    protected static ?string $model = CroscekSd::class;
-
-    protected static ?string $navigationGroup = 'Monitoring Casis';
-
-    protected static ?int $navigationSort = 2;
+    protected static ?string $model = CroscekTk::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
-    protected static ?string $navigationLabel = 'Casis SDIT';
+    protected static ?string $navigationGroup = 'Monitoring Casis';
 
-    protected static ?string $modelLabel = 'Casis SDIT';
+    protected static ?int $navigationSort = 1;
 
-    protected static ?string $pluralModelLabel = 'Casis SDIT';
+    protected static ?string $navigationLabel = 'Casis TKIT';
 
-    protected static ?string $slug = 'casis-sdit';
+    protected static ?string $modelLabel = 'Casis TKIT';
+
+    protected static ?string $pluralModelLabel = 'Casis TKIT';
+
+    protected static ?string $slug = 'casis-tkit';
 
     public static function getPermissionPrefixes(): array
     {
@@ -52,7 +50,6 @@ class CroscekSdResource extends Resource
             'force_delete_any',
         ];
     }
-
 
     public static function form(Form $form): Form
     {
@@ -78,8 +75,8 @@ class CroscekSdResource extends Resource
                             ->label('Siswa')
                             ->placeholder('Pilih Siswa')
                             ->disabledOn('edit')
-                            ->options(function (callable $get, ?CroscekSd $record) {
-                                $selectedSiswaIds = CroscekSd::pluck('siswa_id')->toArray();
+                            ->options(function (callable $get, ?CroscekTk $record) {
+                                $selectedSiswaIds = CroscekTk::pluck('siswa_id')->toArray();
 
                                 // Tambahkan siswa yang sedang dipilih jika sedang dalam mode edit
                                 if ($record && $record->siswa_id) {
@@ -303,9 +300,9 @@ class CroscekSdResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCroscekSds::route('/'),
-            'create' => Pages\CreateCroscekSd::route('/create'),
-            'edit' => Pages\EditCroscekSd::route('/{record}/edit'),
+            'index' => Pages\ListCroscekTks::route('/'),
+            'create' => Pages\CreateCroscekTk::route('/create'),
+            'edit' => Pages\EditCroscekTk::route('/{record}/edit'),
         ];
     }
 }
