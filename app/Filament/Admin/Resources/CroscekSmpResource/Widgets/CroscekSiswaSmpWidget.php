@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Filament\Admin\Resources\CroscekTkResource\Widgets;
+namespace App\Filament\Admin\Resources\CroscekSmpResource\Widgets;
 
-use App\Models\CroscekTk;
+use App\Models\CroscekSmp;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
-class CroscekSiswaTkWidget extends BaseWidget
+class CroscekSiswaSmpWidget extends BaseWidget
 {
     protected function getStats(): array
     {
-        $totalSiswa = CroscekTk::count(); // Total siswa dalam CroscekSD
-        $anakGtkCount = CroscekTk::where('anak_gtk', 'YA')->count(); // Hitung jumlah anak GTK
-        $permintaanCount = CroscekTk::whereNotNull('permintaan')->count(); // Hitung jumlah permintaan
-        $noteCount = CroscekTk::whereNotNull('note')->count(); // Hitung jumlah permintaan
+        $totalSiswa = CroscekSmp::count(); // Total siswa dalam CroscekSD
+        $anakGtkCount = CroscekSmp::where('anak_gtk', 'YA')->count(); // Hitung jumlah anak GTK
+        $permintaanCount = CroscekSmp::whereNotNull('permintaan')->count(); // Hitung jumlah permintaan
+        $noteCount = CroscekSmp::whereNotNull('note')->count(); // Hitung jumlah permintaan
 
         return [
             Stat::make('Data Siswa', $totalSiswa)
                 ->color('info')
-                ->description('Total siswa dalam Croscek TK')
+                ->description('Total siswa dalam Croscek SMP')
                 ->descriptionIcon('heroicon-o-academic-cap'),
 
             Stat::make('Anak GTK', $anakGtkCount)
