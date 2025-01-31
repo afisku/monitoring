@@ -29,6 +29,10 @@
             <th>Total Anak GTK</th>
             <td>{{ $totalAnakGtk }}</td>
         </tr>
+        <tr>
+            <th>Total Anak Mengundurkan Diri</th>
+            <td>{{ $totalSiswaMengundurkanDiri }}</td>
+        </tr>
     </table>
 
 </body>

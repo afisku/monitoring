@@ -15,10 +15,13 @@ class ExportController extends Controller
         $totalSiswaLunas = CroscekSmp::whereHas('statusCasis', function ($query) {
             $query->where('nm_status_casis', 'LUNAS');
         })->count();
+        $totalSiswaMengundurkanDiri = CroscekSmp::whereHas('statusCasis', function ($query) {
+            $query->where('nm_status_casis', 'MENGUNDURKAN DIRI');
+        })->count();
         $totalAnakGtk = CroscekSmp::where('anak_gtk', 'YA')->count();
 
         // Load tampilan PDF
-        $pdf = Pdf::loadView('exports.croscek_smp', compact('totalSiswa', 'totalSiswaLunas', 'totalAnakGtk'));
+        $pdf = Pdf::loadView('exports.croscek_smp', compact('totalSiswa', 'totalSiswaLunas', 'totalSiswaMengundurkanDiri', 'totalAnakGtk'));
 
         // Set ukuran kertas ke portrait
         $pdf->setPaper('A4', 'portrait');
