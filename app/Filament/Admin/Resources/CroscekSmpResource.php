@@ -11,6 +11,7 @@ use App\Models\Siswa;
 use Filament\Forms\Form;
 use App\Models\CroscekSmp;
 use Filament\Tables\Table;
+use App\Models\StatusCasis;
 use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
 use Filament\Tables\Contracts\HasTable;
@@ -177,7 +178,13 @@ class CroscekSmpResource extends Resource
                             ->label('Nama GTK')
                             ->visible(fn ($get) => $get('anak_gtk') === 'YA') // Hanya tampil jika 'anak_gtk' adalah 'YA'
                             ->required(fn ($get) => $get('anak_gtk') === 'YA'), // Wajib diisi jika 'anak_gtk' adalah 'YA'
-                        
+                            
+                        Forms\Components\Select::make('status_casis_id')
+                            ->label('Status')
+                            ->options(StatusCasis::all()->pluck('nm_status_casis', 'id'))
+                            ->searchable()
+                            ->default(fn () => StatusCasis::where('nm_status_casis', 'BELUM TEST')->value('id')) // Ambil ID dari status "BELUM TEST"
+                            ->required(),                  
                     ]),  
             ]);
     }
@@ -278,12 +285,30 @@ class CroscekSmpResource extends Resource
                 })
                 ->html()
                 ->searchable(),
+                Tables\Columns\SelectColumn::make('status_casis_id')
+                ->label('Status')
+                ->options(fn () => StatusCasis::pluck('nm_status_casis', 'id')->toArray())
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->selectablePlaceholder(false),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                ->iconButton()
+                ->color('primary')
+                ->icon('heroicon-m-eye'),
+                Tables\Actions\EditAction::make()
+                ->iconButton()
+                ->color('warning')
+                ->icon('heroicon-m-pencil-square'),
+                Tables\Actions\DeleteAction::make()
+                ->iconButton()
+                ->color('danger')
+                ->icon('heroicon-m-trash')
+                ->modalHeading('Hapus Croscek SMP'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

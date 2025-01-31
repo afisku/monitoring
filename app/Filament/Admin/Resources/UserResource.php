@@ -68,7 +68,7 @@ class UserResource extends Resource
                             ->helperText(fn($operation) => $operation == 'edit' ? new HtmlString('<small style="color:red">Isi jika ingin diubah</small>') : '')
                             ->password()
                             ->revealable()
-                            ->rules(fn(string $operation) => $operation == 'create' ? ['required', Password::min(8)->mixedCase()] : [Password::min(8)->mixedCase()])
+                            ->rules(fn(string $operation) => $operation == 'create' ? ['required', Password::min(8)] : [Password::min(8)])
                             ->confirmed()
                             ->required(fn(string $operation) => $operation == 'create'),
                         Forms\Components\TextInput::make('password_confirmation')

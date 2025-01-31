@@ -9,7 +9,7 @@ class StatusCasis extends Model
     protected $table = 'status_casis';
 
     protected $fillable = [
-        'status_casis',
+        'nm_status_casis',
         'warna',
         'keterangan'
     ];

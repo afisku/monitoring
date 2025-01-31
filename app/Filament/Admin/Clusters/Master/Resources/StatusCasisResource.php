@@ -37,7 +37,7 @@ class StatusCasisResource extends Resource
             ->schema([
                 Forms\Components\Section::make()
                     ->schema([
-                        Forms\Components\TextInput::make('status_casis')
+                        Forms\Components\TextInput::make('nm_status_casis')
                             ->required()
                             ->label('Status Casis')
                             ->maxLength(255),
@@ -63,12 +63,11 @@ class StatusCasisResource extends Resource
                 return $classes;
             })
             ->columns([
-                Tables\Columns\TextColumn::make('status_casis')
+                Tables\Columns\TextColumn::make('nm_status_casis')
                     ->label('Status Casis')
                     ->searchable(),
                 Tables\Columns\ColorColumn::make('warna')
                     ->label('Warna'),
-                    
                 Tables\Columns\TextColumn::make('keterangan')
                     ->label('Keterangan')
                     ->searchable(),
@@ -77,7 +76,19 @@ class StatusCasisResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                ->iconButton()
+                ->color('primary')
+                ->icon('heroicon-m-eye'),
+                Tables\Actions\EditAction::make()
+                ->iconButton()
+                ->color('warning')
+                ->icon('heroicon-m-pencil-square'),
+                Tables\Actions\DeleteAction::make()
+                ->iconButton()
+                ->color('danger')
+                ->icon('heroicon-m-trash')
+                ->modalHeading('Hapus Status Casis'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

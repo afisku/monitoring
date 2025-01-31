@@ -48,37 +48,38 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UnitSeeder::class,
             TahunAkademikSeeder::class,
+            StatusCasisSeeder::class,
         ]);
 
-        if (!Role::where('name', 'operator_sd')->exists()) {
-            $operatorJurusanRole = Role::create(['name' => 'operator_sd']);
-            $operatorJurusanRolePermissions = Permission::query()
-                ->whereIn('name', [
-                    'view_honor::non::kjm',
-                    'view_any_honor::non::kjm',
-                    'create_honor::non::kjm',
-                    'update_honor::non::kjm',
-                    'delete_honor::non::kjm',
-                    'delete_any_honor::non::kjm',
-                    'view_honor::kjm',
-                    'view_any_honor::kjm',
-                    'create_honor::kjm',
-                    'update_honor::kjm',
-                    'delete_honor::kjm',
-                    'delete_any_honor::kjm'
-                ])->get();
-            $operatorJurusanRole->syncPermissions($operatorJurusanRolePermissions);
+        // if (!Role::where('name', 'operator_sd')->exists()) {
+        //     $operatorJurusanRole = Role::create(['name' => 'operator_sd']);
+        //     $operatorJurusanRolePermissions = Permission::query()
+        //         ->whereIn('name', [
+        //             'view_honor::non::kjm',
+        //             'view_any_honor::non::kjm',
+        //             'create_honor::non::kjm',
+        //             'update_honor::non::kjm',
+        //             'delete_honor::non::kjm',
+        //             'delete_any_honor::non::kjm',
+        //             'view_honor::kjm',
+        //             'view_any_honor::kjm',
+        //             'create_honor::kjm',
+        //             'update_honor::kjm',
+        //             'delete_honor::kjm',
+        //             'delete_any_honor::kjm'
+        //         ])->get();
+        //     $operatorJurusanRole->syncPermissions($operatorJurusanRolePermissions);
 
-            $user = User::create([
-                'name' => 'User 1',
-                'username' => 'user1',
-                'email' => 'asd@asd.asd',
-                'email_verified_at' => now(),
-                'unit_id' => 2,
-                'password' => bcrypt('asdasd'),
-            ]);
-            $user->assignRole('operator_sd');
-        }
+        //     $user = User::create([
+        //         'name' => 'User 1',
+        //         'username' => 'user1',
+        //         'email' => 'asd@asd.asd',
+        //         'email_verified_at' => now(),
+        //         'unit_id' => 2,
+        //         'password' => bcrypt('asdasd'),
+        //     ]);
+        //     $user->assignRole('operator_sd');
+        // }
     }
 
     protected function withProgressBar(int $amount, Closure $createCollectionOfOne): Collection

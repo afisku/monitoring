@@ -2,6 +2,7 @@
 
 use App\Models\Unit;
 use App\Models\Siswa;
+use App\Models\StatusCasis;
 use App\Models\TahunAkademik;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -32,6 +33,11 @@ return new class extends Migration
             $table->enum('anak_gtk', ['YA', 'TIDAK'])->default('TIDAK')->nullable();
             $table->enum('unit_gtk', ['TKIT', 'SDIT', 'SMPIT', 'SMAIT'])->nullable();
             $table->string('nama_GTK')->nullable();
+            $table->foreignIdFor(StatusCasis::class, 'status_casis_id')
+                ->nullable()
+                ->references('id')
+                ->on('status_casis')
+                ->nullOnDelete();
             $table->foreignIdFor(TahunAkademik::class, 'tahun_akademik_id')
                 ->references('id')
                 ->on('tahun_akademik')

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('status_casis', function (Blueprint $table) {
             $table->id();
-            $table->string('status_casis');
+            $table->string('nm_status_casis');
             $table->string('warna')->nullable();
             $table->string('keterangan')->nullable();
             $table->timestamps();

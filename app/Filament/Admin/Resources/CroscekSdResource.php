@@ -284,7 +284,19 @@ class CroscekSdResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                ->iconButton()
+                ->color('primary')
+                ->icon('heroicon-m-eye'),
+                Tables\Actions\EditAction::make()
+                ->iconButton()
+                ->color('warning')
+                ->icon('heroicon-m-pencil-square'),
+                Tables\Actions\DeleteAction::make()
+                ->iconButton()
+                ->color('danger')
+                ->icon('heroicon-m-trash')
+                ->modalHeading('Hapus Croscek SD'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

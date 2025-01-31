@@ -91,14 +91,19 @@ class TahunAkademikResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()
+                ->iconButton()
+                ->color('primary')
+                ->icon('heroicon-m-eye'),
                 Tables\Actions\EditAction::make()
-                    ->iconButton()
-                    ->color('warning')
-                    ->icon('heroicon-m-pencil-square'),
+                ->iconButton()
+                ->color('warning')
+                ->icon('heroicon-m-pencil-square'),
                 Tables\Actions\DeleteAction::make()
-                    ->iconButton()
-                    ->color('danger')
-                    ->icon('heroicon-m-trash'),
+                ->iconButton()
+                ->color('danger')
+                ->icon('heroicon-m-trash')
+                ->modalHeading('Hapus Tahun Akademik'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
