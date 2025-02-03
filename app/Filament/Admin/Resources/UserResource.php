@@ -2,19 +2,20 @@
 
 namespace App\Filament\Admin\Resources;
 
+use Filament\Forms;
+use App\Models\Unit;
+use App\Models\User;
+use Filament\Tables;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Illuminate\Support\HtmlString;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rules\Password;
+use BezhanSalleh\FilamentShield\Support\Utils;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers;
-use App\Models\User;
-use BezhanSalleh\FilamentShield\Support\Utils;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\HtmlString;
-use Illuminate\Validation\Rules\Password;
 
 class UserResource extends Resource
 {
@@ -46,6 +47,14 @@ class UserResource extends Resource
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
+                            Forms\Components\Select::make('unit_id')
+                            ->label('Unit')
+                            ->placeholder('PILIH UNIT')
+                            ->options(Unit::all()->pluck('nm_unit', 'id'))
+                            ->searchable()
+                            ->validationMessages([
+                                'required' => 'Unit tidak boleh kosong',
+                            ]),
                         Forms\Components\TextInput::make('email')
                             ->label('Email')
                             ->placeholder('Enter your email address')
@@ -59,7 +68,7 @@ class UserResource extends Resource
                             ->helperText(fn($operation) => $operation == 'edit' ? new HtmlString('<small style="color:red">Isi jika ingin diubah</small>') : '')
                             ->password()
                             ->revealable()
-                            ->rules(fn(string $operation) => $operation == 'create' ? ['required', Password::min(8)->mixedCase()] : [Password::min(8)->mixedCase()])
+                            ->rules(fn(string $operation) => $operation == 'create' ? ['required', Password::min(8)] : [Password::min(8)])
                             ->confirmed()
                             ->required(fn(string $operation) => $operation == 'create'),
                         Forms\Components\TextInput::make('password_confirmation')

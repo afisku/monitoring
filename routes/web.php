@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExportController;
 
 Route::get('/', function () {
     return redirect()->route('filament.admin.auth.login');
@@ -14,3 +15,8 @@ Route::get('download-template-siswa', function () {
     }
     return response()->download($filePath, 'template_siswa.xlsx');
 })->name('download.template.siswa');
+
+
+
+Route::get('/export-croscek/{unit}', [ExportController::class, 'export'])->name('export.croscek');
+
