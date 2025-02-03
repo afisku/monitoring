@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Admin\Resources\CroscekSdResource\Pages;
+namespace App\Filament\Admin\Resources\CroscekSmaResource\Pages;
 
-use App\Filament\Admin\Resources\CroscekSdResource;
-use App\Filament\Admin\Resources\CroscekSdResource\Widgets\CroscekSiswaSdWidget;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Admin\Resources\CroscekSmaResource;
+use App\Filament\Admin\Resources\CroscekSmaResource\Widgets\CroscekSiswaSmaWidget;
 
-class ListCroscekSds extends ListRecords
+class ListCroscekSmas extends ListRecords
 {
-    protected static string $resource = CroscekSdResource::class;
+    protected static string $resource = CroscekSmaResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -19,7 +19,7 @@ class ListCroscekSds extends ListRecords
                 ->label('Export PDF')
                 ->color('success')
                 ->icon('heroicon-o-document-arrow-down')
-                ->url(fn () => route('export.croscek', ['unit' => 'sd']))
+                ->url(fn () => route('export.croscek', ['unit' => 'sma']))
                 ->openUrlInNewTab(), // Buka di tab baru agar tidak mengganggu tampilan admin
         ];
     }
@@ -27,8 +27,7 @@ class ListCroscekSds extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            CroscekSiswaSdWidget::class,
+            CroscekSiswaSmaWidget::class,
         ];
     }
-
 }

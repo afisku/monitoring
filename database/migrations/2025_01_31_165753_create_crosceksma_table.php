@@ -2,6 +2,7 @@
 
 use App\Models\Unit;
 use App\Models\Siswa;
+use App\Models\Divisi;
 use App\Models\StatusCasis;
 use App\Models\TahunAkademik;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('croscektk', function (Blueprint $table) {
+        Schema::create('crosceksma', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Unit::class, 'unit_id')
                 ->nullable()
@@ -31,7 +32,13 @@ return new class extends Migration
             $table->text('permintaan')->nullable();
             $table->text('note')->nullable();
             $table->enum('anak_gtk', ['YA', 'TIDAK'])->default('TIDAK')->nullable();
-            $table->enum('unit_gtk', ['TKIT', 'SDIT', 'SMPIT', 'SMAIT'])->nullable();
+            
+            $table->foreignIdFor(Divisi::class, 'divisi_id')
+                ->nullable()
+                ->references('id')
+                ->on('divisi')
+                ->nullOnDelete();
+
             $table->string('nama_GTK')->nullable();
             $table->foreignIdFor(StatusCasis::class, 'status_casis_id')
                 ->nullable()
@@ -51,6 +58,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('croscektk');
+        Schema::dropIfExists('crosceksma');
     }
 };

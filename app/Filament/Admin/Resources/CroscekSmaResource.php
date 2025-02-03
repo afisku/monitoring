@@ -8,8 +8,9 @@ use Filament\Forms;
 use App\Models\Unit;
 use Filament\Tables;
 use App\Models\Siswa;
+use App\Models\Divisi;
 use Filament\Forms\Form;
-use App\Models\CroscekTk;
+use App\Models\CroscekSma;
 use Filament\Tables\Table;
 use App\Models\StatusCasis;
 use Filament\Resources\Resource;
@@ -17,40 +18,26 @@ use Illuminate\Support\HtmlString;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\CroscekTkResource\Pages;
-use App\Filament\Admin\Resources\CroscekTkResource\RelationManagers;
+use App\Filament\Admin\Resources\CroscekSmaResource\Pages;
+use App\Filament\Admin\Resources\CroscekSmaResource\RelationManagers;
 
-class CroscekTkResource extends Resource
+class CroscekSmaResource extends Resource
 {
-    protected static ?string $model = CroscekTk::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+    protected static ?string $model = CroscekSma::class;
 
     protected static ?string $navigationGroup = 'Monitoring Casis';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 4;
 
-    protected static ?string $navigationLabel = 'Casis TKIT';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
-    protected static ?string $modelLabel = 'Casis TKIT';
+    protected static ?string $navigationLabel = 'Casis SMAIT';
 
-    protected static ?string $pluralModelLabel = 'Casis TKIT';
+    protected static ?string $modelLabel = 'Casis SMAIT';
 
-    protected static ?string $slug = 'casis-tkit';
+    protected static ?string $pluralModelLabel = 'Casis SMAIT';
 
-    public static function getPermissionPrefixes(): array
-    {
-        return [
-            'view',
-            'view_any',
-            'create',
-            'update',
-            'delete',
-            'delete_any',
-            'force_delete',
-            'force_delete_any',
-        ];
-    }
+    protected static ?string $slug = 'casis-smait';
 
     public static function form(Form $form): Form
     {
@@ -76,8 +63,8 @@ class CroscekTkResource extends Resource
                             ->label('Siswa')
                             ->placeholder('Pilih Siswa')
                             ->disabledOn('edit')
-                            ->options(function (callable $get, ?CroscekTk $record) {
-                                $selectedSiswaIds = CroscekTk::pluck('siswa_id')->toArray();
+                            ->options(function (callable $get, ?CroscekSma $record) {
+                                $selectedSiswaIds = CroscekSma::pluck('siswa_id')->toArray();
 
                                 // Tambahkan siswa yang sedang dipilih jika sedang dalam mode edit
                                 if ($record && $record->siswa_id) {
@@ -161,14 +148,11 @@ class CroscekTkResource extends Resource
                             ->default('TIDAK')
                             ->reactive(), // Membuat field ini reaktif untuk memicu kondisi
                         
-                        Forms\Components\Select::make('unit_gtk')
-                            ->label('Unit GTK')
-                            ->options([
-                                'TKIT' => 'TKIT',
-                                'SDIT' => 'SDIT',
-                                'SMPIT' => 'SMPIT',
-                                'SMAIT' => 'SMAIT',
-                            ])
+                        Forms\Components\Select::make('divisi_id')
+                            ->label('Divisi')
+                            ->options(Divisi::all()->pluck('nm_divisi', 'id'))
+                            ->searchable()
+                            ->default(fn () => Divisi::where('nm_divisi', 'BELUM TEST')->value('id')) // Ambil ID dari status "BELUM TEST"
                             ->visible(fn ($get) => $get('anak_gtk') === 'YA') // Hanya tampil jika 'anak_gtk' adalah 'YA'
                             ->required(fn ($get) => $get('anak_gtk') === 'YA'), // Wajib diisi jika 'anak_gtk' adalah 'YA'
                         
@@ -176,14 +160,14 @@ class CroscekTkResource extends Resource
                             ->label('Nama GTK')
                             ->visible(fn ($get) => $get('anak_gtk') === 'YA') // Hanya tampil jika 'anak_gtk' adalah 'YA'
                             ->required(fn ($get) => $get('anak_gtk') === 'YA'), // Wajib diisi jika 'anak_gtk' adalah 'YA'
-                        
-                            Forms\Components\Select::make('status_casis_id')
+                            
+                        Forms\Components\Select::make('status_casis_id')
                             ->label('Status')
                             ->options(StatusCasis::all()->pluck('nm_status_casis', 'id'))
                             ->searchable()
                             ->default(fn () => StatusCasis::where('nm_status_casis', 'BELUM TEST')->value('id')) // Ambil ID dari status "BELUM TEST"
-                            ->required(),     
-                    ]),                    
+                            ->required(),                  
+                    ]), 
             ]);
     }
 
@@ -200,6 +184,7 @@ class CroscekTkResource extends Resource
                 return $classes;
             })
             ->columns([
+                
                 Tables\Columns\TextColumn::make('index')
                 ->label('No')
                 ->width('1%')
@@ -264,31 +249,30 @@ class CroscekTkResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('anak_gtk')
-                ->label('ANAK GTK')
-                ->description(function ($record) {
-                    $data = '';
+                    ->label('ANAK GTK')
+                    ->description(function ($record) {
+                        $data = '';
 
-                    // Tambahkan nomor VA
-                    if (!empty($record->unit_gtk)) {
-                        $data .= '<small>Unit GTK: ' . $record->unit_gtk . '</small>';
-                    }
+                        // Perbaiki akses ke divisi
+                        if (!empty($record->divisi?->nm_divisi)) {
+                            $data .= '<small>Divisi: ' . $record->divisi?->nm_divisi . '</small>';
+                        }
 
-                    // Tambahkan tempat lahir
-                    if (!empty($record->nama_GTK)) {
-                        $data .= ($data ? '<br>' : '') . 
-                            '<small>Nama GTK: ' . $record->nama_GTK . '</small>';
-                    }
+                        // Tambahkan nama GTK
+                        if (!empty($record->nama_GTK)) {
+                            $data .= ($data ? '<br>' : '') . '<small>Nama GTK: ' . $record->nama_GTK . '</small>';
+                        }
 
-                    return new HtmlString($data);
-                })
-                ->html()
-                ->searchable(),
+                        return new HtmlString($data);
+                    })
+                    ->html()
+                    ->searchable(),
                 Tables\Columns\SelectColumn::make('status_casis_id')
                 ->label('Status')
                 ->options(fn () => StatusCasis::pluck('nm_status_casis', 'id')->toArray())
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true)
-                ->selectablePlaceholder(false),
+                ->selectablePlaceholder(false),            
             ])
             ->filters([
                 //
@@ -306,7 +290,7 @@ class CroscekTkResource extends Resource
                 ->iconButton()
                 ->color('danger')
                 ->icon('heroicon-m-trash')
-                ->modalHeading('Hapus Croscek TK'),
+                ->modalHeading('Hapus Croscek SMA'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -325,9 +309,9 @@ class CroscekTkResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCroscekTks::route('/'),
-            'create' => Pages\CreateCroscekTk::route('/create'),
-            'edit' => Pages\EditCroscekTk::route('/{record}/edit'),
+            'index' => Pages\ListCroscekSmas::route('/'),
+            'create' => Pages\CreateCroscekSma::route('/create'),
+            'edit' => Pages\EditCroscekSma::route('/{record}/edit'),
         ];
     }
 }

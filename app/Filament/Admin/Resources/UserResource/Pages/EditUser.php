@@ -2,9 +2,11 @@
 
 namespace App\Filament\Admin\Resources\UserResource\Pages;
 
-use App\Filament\Admin\Resources\UserResource;
+
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Admin\Resources\UserResource;
+use Illuminate\Support\Str;
 
 class EditUser extends EditRecord
 {
@@ -47,7 +49,7 @@ class EditUser extends EditRecord
             $data['email_verified_at'] = now();
         }
 
-        $data['username'] = \Str::slug($data['username']);
+        $data['username'] = Str::slug($data['username']);
 
         return $data;
     }

@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Unit;
+use App\Models\Siswa;
+use App\Models\Divisi;
 use App\Models\StatusCasis;
+use App\Models\TahunAkademik;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class CroscekTk extends Model
+class CroscekSma extends Model
 {
-    protected $table = "croscektk";
+    protected $table = "crosceksma";
 
     protected $fillable = [
         "unit_id",
@@ -18,20 +22,25 @@ class CroscekTk extends Model
         "permintaan",
         "note",
         "anak_gtk",
-        "unit_gtk",
+        "divisi_id",
         "nama_GTK",
         "status_casis_id",
         "tahun_akademik_id",
     ];
 
-    public function unit(): BelongsTo
-    {
-        return $this->belongsTo(Unit::class);
-    }
-
     public function siswa(): BelongsTo
     {
         return $this->belongsTo(Siswa::class, 'siswa_id');
+    }
+
+    public function unit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class, 'unit_id');
+    }
+
+    public function divisi(): BelongsTo
+    {
+        return $this->belongsTo(Divisi::class, 'divisi_id');
     }
 
     public function statusCasis(): BelongsTo
@@ -43,4 +52,5 @@ class CroscekTk extends Model
     {
         return $this->belongsTo(TahunAkademik::class, 'tahun_akademik_id');
     }
+
 }

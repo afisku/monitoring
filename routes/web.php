@@ -18,5 +18,5 @@ Route::get('download-template-siswa', function () {
 
 
 
-Route::get('/export-croscek-smp', [ExportController::class, 'export'])->name('export.croscek-smp');
+Route::get('/export-croscek/{unit}', [ExportController::class, 'export'])->name('export.croscek');
 

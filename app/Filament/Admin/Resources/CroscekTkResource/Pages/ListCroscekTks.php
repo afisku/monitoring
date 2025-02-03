@@ -15,6 +15,12 @@ class ListCroscekTks extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            Actions\Action::make('exportPdf')
+                ->label('Export PDF')
+                ->color('success')
+                ->icon('heroicon-o-document-arrow-down')
+                ->url(fn () => route('export.croscek', ['unit' => 'tk']))
+                ->openUrlInNewTab(), // Buka di tab baru agar tidak mengganggu tampilan admin
         ];
     }
 
