@@ -37,7 +37,7 @@ class SiswaResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Siswa';
 
-    protected static ?string $recordTitleAttribute = 'nm_siswa';
+    // protected static ?string $recordTitleAttribute = 'nm_siswa';
 
     protected static ?string $slug = 'siswa';
 
