@@ -21,7 +21,7 @@ class CroscekSmp extends Model
         "permintaan",
         "note",
         "anak_gtk",
-        "unit_gtk",
+        "divisi_id",
         "nama_GTK",
         "status_casis_id",
         "tahun_akademik_id",
@@ -35,6 +35,11 @@ class CroscekSmp extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class, 'unit_id');
+    }
+
+    public function divisi(): BelongsTo
+    {
+        return $this->belongsTo(Divisi::class, 'divisi_id');
     }
 
     public function statusCasis()

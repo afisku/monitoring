@@ -152,7 +152,6 @@ class CroscekSmaResource extends Resource
                             ->label('Divisi')
                             ->options(Divisi::all()->pluck('nm_divisi', 'id'))
                             ->searchable()
-                            ->default(fn () => Divisi::where('nm_divisi', 'BELUM TEST')->value('id')) // Ambil ID dari status "BELUM TEST"
                             ->visible(fn ($get) => $get('anak_gtk') === 'YA') // Hanya tampil jika 'anak_gtk' adalah 'YA'
                             ->required(fn ($get) => $get('anak_gtk') === 'YA'), // Wajib diisi jika 'anak_gtk' adalah 'YA'
                         
@@ -267,6 +266,7 @@ class CroscekSmaResource extends Resource
                     })
                     ->html()
                     ->searchable(),
+                    
                 Tables\Columns\SelectColumn::make('status_casis_id')
                 ->label('Status')
                 ->options(fn () => StatusCasis::pluck('nm_status_casis', 'id')->toArray())

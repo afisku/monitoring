@@ -32,13 +32,11 @@ return new class extends Migration
             $table->text('permintaan')->nullable();
             $table->text('note')->nullable();
             $table->enum('anak_gtk', ['YA', 'TIDAK'])->default('TIDAK')->nullable();
-            
             $table->foreignIdFor(Divisi::class, 'divisi_id')
                 ->nullable()
                 ->references('id')
                 ->on('divisi')
                 ->nullOnDelete();
-
             $table->string('nama_GTK')->nullable();
             $table->foreignIdFor(StatusCasis::class, 'status_casis_id')
                 ->nullable()

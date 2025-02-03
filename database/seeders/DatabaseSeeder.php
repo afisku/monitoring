@@ -51,110 +51,110 @@ class DatabaseSeeder extends Seeder
             StatusCasisSeeder::class,
         ]);
 
-        if (!Role::where('name', 'operator_sd')->exists()) {
-            $operatorSdRole = Role::create(['name' => 'operator_sd']);
-            $operatorSdRolePermissions = Permission::query()
-                ->whereIn('name', [
-                    'view_croscek::sd',
-                    'view_any_croscek::sd',
-                    'create_croscek::sd',
-                    'update_croscek::sd',
-                    'delete_croscek::sd',
-                    'delete_any_croscek::sd',
-                    'force_delete_croscek::sd',
-                    'force_delete_any_croscek::sd',
-                ])->get();
-            $operatorSdRole->syncPermissions($operatorSdRolePermissions);
+        // if (!Role::where('name', 'operator_sd')->exists()) {
+        //     $operatorSdRole = Role::create(['name' => 'operator_sd']);
+        //     $operatorSdRolePermissions = Permission::query()
+        //         ->whereIn('name', [
+        //             'view_croscek::sd',
+        //             'view_any_croscek::sd',
+        //             'create_croscek::sd',
+        //             'update_croscek::sd',
+        //             'delete_croscek::sd',
+        //             'delete_any_croscek::sd',
+        //             'force_delete_croscek::sd',
+        //             'force_delete_any_croscek::sd',
+        //         ])->get();
+        //     $operatorSdRole->syncPermissions($operatorSdRolePermissions);
 
-            $user = User::create([
-                'name' => 'Operator SD',
-                'username' => 'operatorsd',
-                'email' => 'sdit@alfityan.sch.id',
-                'email_verified_at' => now(),
-                'unit_id' => 2,
-                'password' => bcrypt('asdasd'),
-            ]);
-            $user->assignRole('operator_sd');
-        }
+        //     $user = User::create([
+        //         'name' => 'Operator SD',
+        //         'username' => 'operatorsd',
+        //         'email' => 'sdit@alfityan.sch.id',
+        //         'email_verified_at' => now(),
+        //         'unit_id' => 2,
+        //         'password' => bcrypt('asdasd'),
+        //     ]);
+        //     $user->assignRole('operator_sd');
+        // }
 
 
-        if (!Role::where('name', 'operator_tk')->exists()) {
-            $operatorTkRole = Role::create(['name' => 'operator_tk']);
-            $operatorTkRolePermissions = Permission::query()
-                ->whereIn('name', [
-                    'view_croscek::tk',
-                    'view_any_croscek::tk',
-                    'create_croscek::tk',
-                    'update_croscek::tk',
-                    'delete_croscek::tk',
-                    'delete_any_croscek::tk',
-                    'force_delete_croscek::tk',
-                    'force_delete_any_croscek::tk',
-                ])->get();
-            $operatorTkRole->syncPermissions($operatorTkRolePermissions);
+        // if (!Role::where('name', 'operator_tk')->exists()) {
+        //     $operatorTkRole = Role::create(['name' => 'operator_tk']);
+        //     $operatorTkRolePermissions = Permission::query()
+        //         ->whereIn('name', [
+        //             'view_croscek::tk',
+        //             'view_any_croscek::tk',
+        //             'create_croscek::tk',
+        //             'update_croscek::tk',
+        //             'delete_croscek::tk',
+        //             'delete_any_croscek::tk',
+        //             'force_delete_croscek::tk',
+        //             'force_delete_any_croscek::tk',
+        //         ])->get();
+        //     $operatorTkRole->syncPermissions($operatorTkRolePermissions);
 
-            $user = User::create([
-                'name' => 'Operator TK',
-                'username' => 'operatorsk',
-                'email' => 'tkit@alfityan.sch.id',
-                'email_verified_at' => now(),
-                'unit_id' => 1,
-                'password' => bcrypt('asdasd'),
-            ]);
-            $user->assignRole('operator_tk');
-        }
+        //     $user = User::create([
+        //         'name' => 'Operator TK',
+        //         'username' => 'operatorsk',
+        //         'email' => 'tkit@alfityan.sch.id',
+        //         'email_verified_at' => now(),
+        //         'unit_id' => 1,
+        //         'password' => bcrypt('asdasd'),
+        //     ]);
+        //     $user->assignRole('operator_tk');
+        // }
 
-        if (!Role::where('name', 'operator_a')->exists()) {
-            $operatorSmpRole = Role::create(['name' => 'operator_smp']);
-            $operatorSmpRolePermissions = Permission::query()
-                ->whereIn('name', [
-                    'view_croscek::smp',
-                    'view_any_croscek::smp',
-                    'create_croscek::smp',
-                    'update_croscek::smp',
-                    'delete_croscek::smp',
-                    'delete_any_croscek::smp',
-                    'force_delete_croscek::smp',
-                    'force_delete_any_croscek::smp',
-                ])->get();
-            $operatorSmpRole->syncPermissions($operatorSmpRolePermissions);
+        // if (!Role::where('name', 'operator_a')->exists()) {
+        //     $operatorSmpRole = Role::create(['name' => 'operator_smp']);
+        //     $operatorSmpRolePermissions = Permission::query()
+        //         ->whereIn('name', [
+        //             'view_croscek::smp',
+        //             'view_any_croscek::smp',
+        //             'create_croscek::smp',
+        //             'update_croscek::smp',
+        //             'delete_croscek::smp',
+        //             'delete_any_croscek::smp',
+        //             'force_delete_croscek::smp',
+        //             'force_delete_any_croscek::smp',
+        //         ])->get();
+        //     $operatorSmpRole->syncPermissions($operatorSmpRolePermissions);
 
-            $user = User::create([
-                'name' => 'Operator Smp',
-                'username' => 'operatorsmp',
-                'email' => 'smpit@alfityan.sch.id',
-                'email_verified_at' => now(),
-                'unit_id' => 3,
-                'password' => bcrypt('asdasd'),
-            ]);
-            $user->assignRole('operator_smp');
-        }
+        //     $user = User::create([
+        //         'name' => 'Operator Smp',
+        //         'username' => 'operatorsmp',
+        //         'email' => 'smpit@alfityan.sch.id',
+        //         'email_verified_at' => now(),
+        //         'unit_id' => 3,
+        //         'password' => bcrypt('asdasd'),
+        //     ]);
+        //     $user->assignRole('operator_smp');
+        // }
 
-        if (!Role::where('name', 'operator_sma')->exists()) {
-            $operatorSmaRole = Role::create(['name' => 'operator_sma']);
-            $operatorSmaRolePermissions = Permission::query()
-                ->whereIn('name', [
-                    'view_croscek::sma',
-                    'view_any_croscek::sma',
-                    'create_croscek::sma',
-                    'update_croscek::sma',
-                    'delete_croscek::sma',
-                    'delete_any_croscek::sma',
-                    'force_delete_croscek::sma',
-                    'force_delete_any_croscek::sma',
-                ])->get();
-            $operatorSmaRole->syncPermissions($operatorSmaRolePermissions);
+        // if (!Role::where('name', 'operator_sma')->exists()) {
+        //     $operatorSmaRole = Role::create(['name' => 'operator_sma']);
+        //     $operatorSmaRolePermissions = Permission::query()
+        //         ->whereIn('name', [
+        //             'view_croscek::sma',
+        //             'view_any_croscek::sma',
+        //             'create_croscek::sma',
+        //             'update_croscek::sma',
+        //             'delete_croscek::sma',
+        //             'delete_any_croscek::sma',
+        //             'force_delete_croscek::sma',
+        //             'force_delete_any_croscek::sma',
+        //         ])->get();
+        //     $operatorSmaRole->syncPermissions($operatorSmaRolePermissions);
 
-            $user = User::create([
-                'name' => 'Operator Sma',
-                'username' => 'operatorsma',
-                'email' => 'smait@alfityan.sch.id',
-                'email_verified_at' => now(),
-                'unit_id' => 4,
-                'password' => bcrypt('asdasd'),
-            ]);
-            $user->assignRole('operator_sma');
-        }
+        //     $user = User::create([
+        //         'name' => 'Operator Sma',
+        //         'username' => 'operatorsma',
+        //         'email' => 'smait@alfityan.sch.id',
+        //         'email_verified_at' => now(),
+        //         'unit_id' => 4,
+        //         'password' => bcrypt('asdasd'),
+        //     ]);
+        //     $user->assignRole('operator_sma');
+        // }
     }
 
     protected function withProgressBar(int $amount, Closure $createCollectionOfOne): Collection

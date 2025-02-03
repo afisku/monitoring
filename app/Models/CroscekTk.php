@@ -18,7 +18,7 @@ class CroscekTk extends Model
         "permintaan",
         "note",
         "anak_gtk",
-        "unit_gtk",
+        "divisi_id",
         "nama_GTK",
         "status_casis_id",
         "tahun_akademik_id",
@@ -32,6 +32,11 @@ class CroscekTk extends Model
     public function siswa(): BelongsTo
     {
         return $this->belongsTo(Siswa::class, 'siswa_id');
+    }
+
+    public function divisi(): BelongsTo
+    {
+        return $this->belongsTo(Divisi::class, 'divisi_id');
     }
 
     public function statusCasis(): BelongsTo

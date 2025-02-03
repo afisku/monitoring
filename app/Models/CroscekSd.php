@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Unit;
 use App\Models\Siswa;
+use App\Models\Divisi;
 use App\Models\StatusCasis;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,7 +22,7 @@ class CroscekSd extends Model
         "permintaan",
         "note",
         "anak_gtk",
-        "unit_gtk",
+        "divisi_id",
         "nama_GTK",
         "status_casis_id",
         "tahun_akademik_id",
@@ -40,6 +41,11 @@ class CroscekSd extends Model
     public function statusCasis(): BelongsTo
     {
         return $this->belongsTo(StatusCasis::class, 'status_casis_id');
+    }
+
+    public function divisi(): BelongsTo
+    {
+        return $this->belongsTo(Divisi::class, 'divisi_id');
     }
 
     public function tahunAkademik(): BelongsTo

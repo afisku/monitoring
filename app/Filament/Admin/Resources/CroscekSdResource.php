@@ -3,11 +3,13 @@
 namespace App\Filament\Admin\Resources;
 
 
+use stdClass;
 use Carbon\Carbon;
 use Filament\Forms;
 use App\Models\Unit;
 use Filament\Tables;
 use App\Models\Siswa;
+use App\Models\Divisi;
 use Filament\Forms\Form;
 use App\Models\CroscekSd;
 use Filament\Tables\Table;
@@ -19,7 +21,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\CroscekSdResource\Pages;
 use App\Filament\Admin\Resources\CroscekSdResource\RelationManagers;
 use App\Filament\Admin\Resources\CroscekSdResource\Widgets\CroscekSdStats;
-use stdClass;
 
 class CroscekSdResource extends Resource
 {
@@ -163,14 +164,10 @@ class CroscekSdResource extends Resource
                             ->default('TIDAK')
                             ->reactive(), // Membuat field ini reaktif untuk memicu kondisi
                         
-                        Forms\Components\Select::make('unit_gtk')
-                            ->label('Unit GTK')
-                            ->options([
-                                'TKIT' => 'TKIT',
-                                'SDIT' => 'SDIT',
-                                'SMPIT' => 'SMPIT',
-                                'SMAIT' => 'SMAIT',
-                            ])
+                        Forms\Components\Select::make('divisi_id')
+                            ->label('Divisi')
+                            ->options(Divisi::all()->pluck('nm_divisi', 'id'))
+                            ->searchable()
                             ->visible(fn ($get) => $get('anak_gtk') === 'YA') // Hanya tampil jika 'anak_gtk' adalah 'YA'
                             ->required(fn ($get) => $get('anak_gtk') === 'YA'), // Wajib diisi jika 'anak_gtk' adalah 'YA'
                         
@@ -260,25 +257,24 @@ class CroscekSdResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('anak_gtk')
-                ->label('ANAK GTK')
-                ->description(function ($record) {
-                    $data = '';
+                    ->label('ANAK GTK')
+                    ->description(function ($record) {
+                        $data = '';
 
-                    // Tambahkan nomor VA
-                    if (!empty($record->unit_gtk)) {
-                        $data .= '<small>Unit GTK: ' . $record->unit_gtk . '</small>';
-                    }
+                        // Perbaiki akses ke divisi
+                        if (!empty($record->divisi?->nm_divisi)) {
+                            $data .= '<small>Divisi: ' . $record->divisi?->nm_divisi . '</small>';
+                        }
 
-                    // Tambahkan tempat lahir
-                    if (!empty($record->nama_GTK)) {
-                        $data .= ($data ? '<br>' : '') . 
-                            '<small>Nama GTK: ' . $record->nama_GTK . '</small>';
-                    }
+                        // Tambahkan nama GTK
+                        if (!empty($record->nama_GTK)) {
+                            $data .= ($data ? '<br>' : '') . '<small>Nama GTK: ' . $record->nama_GTK . '</small>';
+                        }
 
-                    return new HtmlString($data);
-                })
-                ->html()
-                ->searchable(),
+                        return new HtmlString($data);
+                    })
+                    ->html()
+                    ->searchable(),
             ])
             ->filters([
                 //
