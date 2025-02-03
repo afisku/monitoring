@@ -21,9 +21,6 @@ class ListSiswas extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-
-
-            
         ];
 
     }

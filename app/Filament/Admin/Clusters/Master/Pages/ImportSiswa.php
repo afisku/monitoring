@@ -26,9 +26,10 @@ class ImportSiswa extends Page implements HasTable
     {
         return [
             \EightyNine\ExcelImport\ExcelImportAction::make()
+                ->label('ASD')
                 ->color("primary")
                 ->use(SiswaImportProcessor::class),
-                \Filament\Actions\Action::make('download')
+            \Filament\Actions\Action::make('download')
                 ->label('Download Template')
                 ->color('success')
                 ->icon('heroicon-m-document-arrow-down')
