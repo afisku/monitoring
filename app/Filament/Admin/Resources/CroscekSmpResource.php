@@ -283,10 +283,9 @@ class CroscekSmpResource extends Resource
                     ->searchable(),
                     
                 Tables\Columns\SelectColumn::make('status_casis_id')
-                ->label('Status')
+                ->label('STATUS')
                 ->options(fn () => StatusCasis::pluck('nm_status_casis', 'id')->toArray())
                 ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true)
                 ->selectablePlaceholder(false),
             ])
             ->filters([

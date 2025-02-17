@@ -13,6 +13,7 @@ use App\Models\Divisi;
 use Filament\Forms\Form;
 use App\Models\CroscekSd;
 use Filament\Tables\Table;
+use App\Models\StatusCasis;
 use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
 use Filament\Tables\Contracts\HasTable;
@@ -176,6 +177,12 @@ class CroscekSdResource extends Resource
                             ->visible(fn ($get) => $get('anak_gtk') === 'YA') // Hanya tampil jika 'anak_gtk' adalah 'YA'
                             ->required(fn ($get) => $get('anak_gtk') === 'YA'), // Wajib diisi jika 'anak_gtk' adalah 'YA'
                         
+                        Forms\Components\Select::make('status_casis_id')
+                            ->label('Status')
+                            ->options(StatusCasis::all()->pluck('nm_status_casis', 'id'))
+                            ->searchable()
+                            ->default(fn () => StatusCasis::where('nm_status_casis', 'BELUM TEST')->value('id')) // Ambil ID dari status "BELUM TEST"
+                            ->required(),
                     ]),                    
             ]);
     }
@@ -275,6 +282,12 @@ class CroscekSdResource extends Resource
                     })
                     ->html()
                     ->searchable(),
+
+                Tables\Columns\SelectColumn::make('status_casis_id')
+                    ->label('STATUS')
+                    ->options(fn () => StatusCasis::pluck('nm_status_casis', 'id')->toArray())
+                    ->sortable()
+                    ->selectablePlaceholder(false),
             ])
             ->filters([
                 //

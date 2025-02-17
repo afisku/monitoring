@@ -50,7 +50,15 @@
 
     <p><strong>Total Siswa:</strong> {{ $totalSiswa }}</p>
     <p><strong>Total Siswa Lunas:</strong> {{ $totalLunas }}</p>
+    <p><strong>Total Siswa Mengundurkan Diri:</strong> <span style="color: red">{{ $totalMengundurkanDiri }}</span></p>
     <p><strong>Total Anak GTK:</strong> {{ $totalAnakGtk }}</p>
+    <p><strong>Total Siswa Status Yatim di {{ strtoupper($unit) }}:</strong> {{ $totalYatim }}</p>
+    <p><strong>Total Siswa Pindahan di {{ strtoupper($unit) }}:</strong> {{ $totalPindahan }}</p>
+    <p><strong>Total Siswa Alumni di {{ strtoupper($unit) }}:</strong> {{ $totalAlumni }}</p>
+    <p><strong>Total Siswa Perempuan di {{ strtoupper($unit) }}:</strong> {{ $totalPerempuan }}</p>
+    <p><strong>Total Siswa Laki-Laki di {{ strtoupper($unit) }}:</strong> {{ $totalLakiLaki }}</p>
+
+
 
     <!-- TABEL DATA -->
     <table class="table">

@@ -283,7 +283,6 @@ class CroscekTkResource extends Resource
                 ->label('Status')
                 ->options(fn () => StatusCasis::pluck('nm_status_casis', 'id')->toArray())
                 ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true)
                 ->selectablePlaceholder(false),
             ])
             ->filters([

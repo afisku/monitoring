@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Siswa;
 use App\Models\CroscekSd;
+use App\Models\CroscekTk;
 use App\Models\CroscekSma;
 use App\Models\CroscekSmp;
-use App\Models\CroscekTk;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -24,13 +25,22 @@ class ExportController extends Controller
 
         // Hitung statistik
         $totalSiswa = $data->count();
-        $totalLunas = $data->where('status_casis_id', function ($query) {
-            $query->select('id')->from('status_casis')->where('nm_status_casis', 'LUNAS');
-        })->count();
+        $totalLunas = $data->filter(fn($siswa) => optional($siswa->statusCasis)->nm_status_casis === 'LUNAS')->count();
+        $totalMengundurkanDiri = $data->filter(fn($siswa) => optional($siswa->statusCasis)->nm_status_casis === 'MENGUNDURKAN DIRI')->count();
         $totalAnakGtk = $data->where('anak_gtk', 'YA')->count();
 
+        // Hitung total siswa yatim per unit
+        // **Hitung total siswa yatim hanya di unit yang dipilih**
+        $totalYatim = $data->filter(fn($siswa) => $siswa->siswa->yatim_piatu === 'YA')->count();
+        $totalPindahan = $data->filter(fn($siswa) => $siswa->siswa->pindahan)->count();
+        $totalAlumni = $data->filter(fn($siswa) => $siswa->siswa->asal_sekolah === 'AL-FITYAN')->count();
+        $totalPerempuan = $data->filter(fn($siswa) => $siswa->siswa->jenis_kelamin === 'PEREMPUAN')->count();
+        $totalLakiLaki = $data->filter(fn($siswa) => $siswa->siswa->jenis_kelamin === 'LAKI-LAKI')->count();
+
+
+
         // Kirim ke view PDF
-        $pdf = Pdf::loadView('exports.croscek', compact('data', 'unit', 'totalSiswa', 'totalLunas', 'totalAnakGtk'));
+        $pdf = Pdf::loadView('exports.croscek', compact('data', 'unit', 'totalSiswa', 'totalLunas', 'totalMengundurkanDiri', 'totalAnakGtk', 'totalYatim','totalPindahan','totalAlumni','totalPerempuan','totalLakiLaki'));
         return $pdf->stream("export-{$unit}.pdf"); // Tampilkan di browser
     }
 }

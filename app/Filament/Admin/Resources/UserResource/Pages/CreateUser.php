@@ -2,9 +2,10 @@
 
 namespace App\Filament\Admin\Resources\UserResource\Pages;
 
-use App\Filament\Admin\Resources\UserResource;
+use Illuminate\Support\Str;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Admin\Resources\UserResource;
 
 class CreateUser extends CreateRecord
 {
@@ -21,7 +22,7 @@ class CreateUser extends CreateRecord
             $data['email_verified_at'] = now();
         }
 
-        $data['username'] = \Str::slug($data['username']);
+        $data['username'] = Str::slug($data['username']);
 
         return $data;
     }
